@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Family Safety App (Parent & Daughter App)
 
 This project is built using React Native & Expo. It includes:
@@ -8,3 +9,6 @@ This project is built using React Native & Expo. It includes:
 1. Open terminal in `family-safety-app`
 2. Run `npx expo start`
 3. Scan the QR code using Expo Go app on your phone.
+=======
+# Family-safety-app
+>>>>>>> e8acf7e42f15baafb0f2cceb0b60bfdb816abaec
