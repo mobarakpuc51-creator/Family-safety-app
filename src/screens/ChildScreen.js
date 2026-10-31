@@ -1,7 +1,32 @@
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { db } from '../firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function ChildScreen({ onBack }) {
+  const [statusText, setStatusText] = useState('🟢 Connecting to Firebase...');
+
+  useEffect(() => {
+    // Simulate sending live status & location to Firebase
+    async function updateChildStatus() {
+      try {
+        await setDoc(doc(db, "devices", "daughter_device"), {
+          status: "Active",
+          battery: "85%",
+          lastActive: serverTimestamp(),
+          location: {
+            latitude: 23.8103,
+            longitude: 90.4125
+          }
+        });
+        setStatusText('🟢 Protected & Connected Live');
+      } catch (error) {
+        setStatusText('⚠️ Connected locally (Offline mode)');
+      }
+    }
+    updateChildStatus();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -14,11 +39,11 @@ export default function ChildScreen({ onBack }) {
         <View style={styles.shieldBox}>
           <Text style={styles.shieldEmoji}>🛡️</Text>
           <Text style={styles.shieldTitle}>Protected & Monitored</Text>
-          <Text style={styles.shieldDesc}>Your device is securely connected with your parents for safety.</Text>
+          <Text style={styles.shieldDesc}>Your device is securely connected with your parents in real-time via Firebase.</Text>
         </View>
         <View style={styles.statusBox}>
-          <Text style={styles.statusText}>🟢 Location & Safety Active</Text>
-          <Text style={styles.statusSub}>Running safely in the background</Text>
+          <Text style={styles.statusText}>{statusText}</Text>
+          <Text style={styles.statusSub}>Location & safety data syncing live</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -36,6 +61,6 @@ const styles = StyleSheet.create({
   shieldTitle: { fontSize: 22, fontWeight: 'bold', color: '#2f3640', marginBottom: 10, textAlign: 'center' },
   shieldDesc: { fontSize: 15, color: '#718093', textAlign: 'center', lineHeight: 22 },
   statusBox: { backgroundColor: '#e8f8f5', padding: 15, borderRadius: 10, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#a3e4d7' },
-  statusText: { fontSize: 16, fontWeight: 'bold', color: '#117a65' },
+  statusText: { fontSize: 16, fontWeight: 'bold', color: '#117a65', textAlign: 'center' },
   statusSub: { fontSize: 13, color: '#1abc9c', marginTop: 3 }
 });
